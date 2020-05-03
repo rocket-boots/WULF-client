@@ -29,6 +29,17 @@ h1 {
 	flex-grow: 1;
 }
 
+#map span {
+	font-size: 1.4rem;
+	display: inline-block;
+	width: 1em;
+	text-align: center;
+	cursor: pointer;
+}
+#map span:hover {
+	background: rgba(255,255,0, 0.3);
+}
+
 .crew-communication {
 	display: flex;
 	flex-direction: row;

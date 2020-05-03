@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
-	<title>Starship Mud</title>
+	<title>WULF</title>
 	<link rel="stylesheet" type="text/css" href="styles/starship.css" />
 	<link rel="stylesheet" type="text/css" href="styles/fontawesome-free-5.0.12/fontawesome-all.css" />
 	<!-- <script src="/socket.io/socket.io.js"></script> -->
@@ -10,7 +10,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body>
-<div id="body">
+<main id="body">
+	<div id="map">X</div>
 	<div class="crew-communication">
 		<section class="crew">
 			<h1><i class="fa fa-address-book"></i> Players</h1>
@@ -29,7 +30,8 @@
 			</form>
 		</section>
 	</div>
-</div>
+</main>
 </body>
-<script src="scripts/client.js"></script>
+<script type="module" src="scripts/client.js"></script>
+<!-- <script nomodule src="fallback.js"></script> -->
 </html>
