@@ -1,0 +1,122 @@
+html, body {
+	padding: 0;
+	margin: 0;
+}
+body {
+	display: flex;
+	flex-direction: column;
+	background: #110800; /* #221811; */
+	color: #fff;
+	font-family: Courier;
+	text-align: center;
+}
+
+#page {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	height: 100vh;
+}
+
+.main-header {
+	flex-grow: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.game {
+	display: flex;
+	flex-direction: row;
+	width: 90%;
+	min-width: 60em;
+	min-height: 30em;
+	margin: 0 auto;
+	padding: 1em;
+	background-color: #5252FF;
+	border-radius: 1em;
+	box-shadow: 0 1em 1em rgba(0,0,0,0.2);
+}
+
+.controller {
+	flex-grow: 2;
+}
+
+.main-footer {
+	flex-grow: 1;
+}
+
+.scripts {
+	display: none;
+}
+
+
+/* ---- Game ---- */
+
+.game-world {
+	margin-right: 1em;
+	border: solid 4px #999;
+	background: #222;
+	flex-shrink: 1;
+	overflow: hidden;
+}
+.game-world canvas {
+	background: #000;
+}
+
+.game-interface {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+}
+
+.stats {
+	border: solid 4px #999;
+	background: #000;
+	margin-bottom: 1em;
+	flex-grow: 1;
+}
+.output {
+	border: solid 4px #999;
+	background: #000;
+	margin-bottom: 1em;
+	flex-grow: 1;
+}
+.input {
+	border: solid 4px #999;
+	background: #000;	
+}
+
+/* Chat */
+
+.chat-sender {
+	display: inline-block;
+	font-size: 70%;
+	font-weight: bold;
+	margin: 0.5em 0;
+}
+.chat-sender::after {
+	content: ":";
+	display: inline-block;
+	margin-right: 0.5em;
+}
+.chat-message {
+	margin-bottom: 0.5em;
+}
+
+
+/* game temp */
+
+#map span {
+	font-size: 1rem;
+	display: inline-block;
+	width: 1em;
+	text-align: center;
+	cursor: pointer;
+	background: rgba(0,0,0,0.2);
+}
+#map span:hover {
+	background: rgba(255,255,0, 0.3);
+}

@@ -3,35 +3,72 @@
 <head>
 	<meta charset="utf-8" />
 	<title>WULF</title>
-	<link rel="stylesheet" type="text/css" href="styles/starship.css" />
+	<link rel="stylesheet" href="styles/ultima-like.css" />
 	<link rel="stylesheet" type="text/css" href="styles/fontawesome-free-5.0.12/fontawesome-all.css" />
-	<!-- <script src="/socket.io/socket.io.js"></script> -->
+	<!-- <script src="/scripts/socket.io.js"></script> -->
 	<!-- https://stackoverflow.com/a/56075477/1766230 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body>
-<main id="body">
-	<div id="map">X</div>
-	<div class="crew-communication">
-		<section class="crew">
-			<h1><i class="fa fa-address-book"></i> Players</h1>
-			<ul id="crew-list">
-			</ul>
-		</section>
-		<section id="chat" class="chat input-output-container">
-			<div id="chat-output" class="output">
-				<h1>Chat <i class="fa fa-comments"></i></h1>
+	<main id="page">
+		<header class="main-header">
+			<h1><abbr title="Web-based Ultima-Like Framework - Luke's Ongoing Role-Playing Rogue-Like">WULF - LORPRL</abbr></h1>
+		</header>
+		<div class="game">
+			<div class="game-world">
+				<section id="pixi-view"></section>
 			</div>
-			<form onsubmit="return false;">
-				<div id="chat-input" class="input" contenteditable="true" role="textbox" tabindex="2" spellcheck="true" autocorrect="off">
-
+			<div class="game-interface">
+				<div class="stats">
+					<h1>Players</h1>
+					<ul id="player-list">
+						<!-- populated by js -->
+					</ul>
 				</div>
-				<!-- <button type="submit">submit</button> -->
-			</form>
-		</section>
-	</div>
-</main>
+				<div class="output">
+					<div id="chat-output">
+						<h1>Chat <i class="fa fa-comments"></i></h1>
+					</div>
+				</div>
+				<div class="input">
+					<section id="chat">
+						<form onsubmit="return false;">
+							<div id="chat-input" contenteditable="true" role="textbox" tabindex="2" spellcheck="true" autocorrect="off">
+
+							</div>
+							<!-- <button type="submit">submit</button> -->
+						</form>
+					</section>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div id="map">X</div>
+		</div>
+		<div class="controller">
+			[Controller]
+		</div>
+		<footer class="main-footer">
+			[Footer]
+		</footer>
+	</main>
 </body>
+
+<!-- Code from LORPRL -->
+<script src="scripts/libs/lodash.min.js"></script>
+<script src="scripts/libs/pixi.js"></script>
+<script src="scripts/libs/astar.js"></script>
+<script src="https://deathraygames.github.io/wogen/scripts/wogen.js"></script>
+<script src="https://rocket-boots.github.io/rocket-boots/scripts/rocketboots/core.js"></script>
+<script> RocketBoots.useGitHubScripts(); </script>
+<script src="../../rocket-boots/scripts/rocketboots/PIXI.js"></script>
+<script src="../../rocket-boots/scripts/rocketboots/GameImage.js"></script>
+<script src="../../rocket-boots/scripts/rocketboots/Spritesheet.js"></script>
+<script src="scripts/scroll_o_sprites.js"></script>
+<script src="scripts/Character.js"></script>
+<script src="scripts/game.js"></script>
+
+<!-- WULF -->
 <script type="module" src="scripts/client.js"></script>
 <!-- <script nomodule src="fallback.js"></script> -->
 </html>

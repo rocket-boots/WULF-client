@@ -15,7 +15,7 @@ const events = {
 	CHAT: 'chat',
 	USERS: 'users'
 };
-const chatOutputElement = document.getElementById('chat-output');
+const chatOutputElement = $('#chat-output');
 // const worldOutputElement = document.getElementById('world-output');
 // const consoleOutputElement = document.getElementById('console-output');
 
@@ -28,7 +28,7 @@ usersSocket.on(events.CHAT, onReceivedChat);
 usersSocket.on(events.USERS, onReceivedUsers)
 
 function setupForms() {
-	const chatElement = document.getElementById('chat');
+	const chatElement = $('#chat');
 	const forms = chatElement.getElementsByTagName('form');
 	forms[0].addEventListener('submit', submitChat);
 }
@@ -36,7 +36,7 @@ function setupForms() {
 function onKeyPress(event) {
 	if (event.keyCode === 13 || event.which === 13) {
 		event.preventDefault();
-		if (document.activeElement === document.getElementById('chat-input')) {
+		if (document.activeElement === $('#chat-input')) {
 			submitChat();
 		}
 	}
@@ -48,16 +48,16 @@ function onReceivedUsers(users) {
 	users.forEach((person) => {
 		h += '<li>' + person.name + '</li>';
 	});
-	document.getElementById('crew-list').innerHTML = h;
+	$('#player-list').innerHTML = h;
 }
 
 function onReceivedChat(message, senderName) {
 	// /console.log(data);
 	const messageElement = document.createElement('div');
-	let h = '<div class="chat-message">' + message + '</div>';
+	let h = '<span class="chat-message">' + message + '</span>';
 	if (senderName) {
 		if (senderName !== lastChatSenderName) {
-			h = '<div class="chat-sender">' + senderName + '</div>' + h;
+			h = '<span class="chat-sender">' + senderName + '</span>' + h;
 			lastChatSenderName = senderName;
 		}
 	}
@@ -100,12 +100,14 @@ const mapsSocket = io('http://localhost:5000/wulf/maps');
 mapsSocket.on('refresh', refreshMap);
 
 function refreshMap(map) {
-	const { terrain, mapKey, characters } = map;
+	const { terrain, mapKey, characters, tiles } = map;
 	console.log('refreshing map', map);
 	let html = '';
 	terrain.forEach((row, y) => {
 		for(let x = 0; x < row.length; x++) {
-			html += `<span class="${mapKey}-${x}-${y}" data-x="${x}" data-y="${y}">${row.charAt(x)}</span>`;
+			const tileLetter = row.charAt(x);
+			const tile = tiles[tileLetter];
+			html += `<span class="${mapKey}-${x}-${y} tile-${tile}" data-x="${x}" data-y="${y}">${tileLetter}</span>`;
 		}
 		html += '<br>';
 	});
