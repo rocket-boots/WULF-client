@@ -4,7 +4,6 @@ RocketBoots.loadComponents([
 	"Coords",
 	"StateMachine",
 	"Dice",
-	"Entity",
 	"Loop",
 	"Stage",
 	"World",

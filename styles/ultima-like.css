@@ -19,19 +19,24 @@ body {
 }
 
 .main-header {
-	flex-grow: 1;
 	display: flex;
+	flex-grow: 1;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
 }
+.version {
+	font-size: 60%;
+	opacity: 0.6;
+}
 
 .game {
 	display: flex;
+	flex-grow: 2;
 	flex-direction: row;
 	width: 90%;
 	min-width: 60em;
-	min-height: 30em;
+	min-height: 20em;
 	margin: 0 auto;
 	padding: 1em;
 	background-color: #5252FF;
@@ -72,21 +77,24 @@ body {
 	text-align: left;
 }
 
-.stats {
+.interface-box {
 	border: solid 4px #999;
 	background: #000;
+}
+
+.stats {
+	margin-bottom: 1em;
+	flex-grow: 10;
+}
+.quick-stats {
 	margin-bottom: 1em;
 	flex-grow: 1;
 }
 .output {
-	border: solid 4px #999;
-	background: #000;
-	margin-bottom: 1em;
-	flex-grow: 1;
+	flex-grow: 10;
 }
 .input {
-	border: solid 4px #999;
-	background: #000;	
+	border-top: 0;	
 }
 
 /* Chat */

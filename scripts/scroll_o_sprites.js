@@ -1,4 +1,4 @@
-let scroll_o_sprites = {
+const scroll_o_sprites = {
 	keys: [
 		[ // Characters
 			"man", "ranger-man", "fighter-man", "cleric-man",
@@ -69,7 +69,7 @@ let scroll_o_sprites = {
 		[ // Overworld
 			"grass", "dirt", "small-plant", "tree",
 			"pine-tree", "dead-tree", "ocean", "stones",
-			"cave", "house", "wastle", "cart",
+			"cave", "house", "castle", "cart",
 			"boat"
 		],
 		[],
@@ -134,3 +134,5 @@ let scroll_o_sprites = {
 	"license": "CC-BY-3.0 (Free to use and share!)",
 	"credits": ["Quale-Art.Blogspot.com", "deathraygames.com"]
 };
+
+export default scroll_o_sprites;

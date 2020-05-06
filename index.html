@@ -5,6 +5,7 @@
 	<title>WULF</title>
 	<link rel="stylesheet" href="styles/ultima-like.css" />
 	<link rel="stylesheet" type="text/css" href="styles/fontawesome-free-5.0.12/fontawesome-all.css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0">
 	<!-- <script src="/scripts/socket.io.js"></script> -->
 	<!-- https://stackoverflow.com/a/56075477/1766230 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
@@ -12,25 +13,31 @@
 <body>
 	<main id="page">
 		<header class="main-header">
-			<h1><abbr title="Web-based Ultima-Like Framework - Luke's Ongoing Role-Playing Rogue-Like">WULF - LORPRL</abbr></h1>
+			<h1>
+				<abbr title="Web-based Ultima-Like Framework">WULF</abbr>
+				<span class="version">Pre-Alpha</span>
+			</h1>
 		</header>
 		<div class="game">
 			<div class="game-world">
 				<section id="pixi-view"></section>
 			</div>
 			<div class="game-interface">
-				<div class="stats">
-					<h1>Players</h1>
+				<div class="stats interface-box">
+					<!-- <h1>Players</h1> -->
 					<ul id="player-list">
 						<!-- populated by js -->
 					</ul>
 				</div>
-				<div class="output">
+				<div class="quick-stats interface-box">
+
+				</div>
+				<div class="output interface-box">
 					<div id="chat-output">
-						<h1>Chat <i class="fa fa-comments"></i></h1>
+						<!-- <h1>Chat <i class="fa fa-comments"></i></h1> -->
 					</div>
 				</div>
-				<div class="input">
+				<div class="input interface-box">
 					<section id="chat">
 						<form onsubmit="return false;">
 							<div id="chat-input" contenteditable="true" role="textbox" tabindex="2" spellcheck="true" autocorrect="off">
@@ -58,17 +65,21 @@
 <script src="scripts/libs/lodash.min.js"></script>
 <script src="scripts/libs/pixi.js"></script>
 <script src="scripts/libs/astar.js"></script>
+
 <script src="https://deathraygames.github.io/wogen/scripts/wogen.js"></script>
 <script src="https://rocket-boots.github.io/rocket-boots/scripts/rocketboots/core.js"></script>
 <script> RocketBoots.useGitHubScripts(); </script>
-<script src="../../rocket-boots/scripts/rocketboots/PIXI.js"></script>
+<script src="../../rocket-boots/scripts/rocketboots/Color.js"></script>
 <script src="../../rocket-boots/scripts/rocketboots/GameImage.js"></script>
 <script src="../../rocket-boots/scripts/rocketboots/Spritesheet.js"></script>
-<script src="scripts/scroll_o_sprites.js"></script>
-<script src="scripts/Character.js"></script>
-<script src="scripts/game.js"></script>
+<script src="../../rocket-boots/scripts/rocketboots/Coords.js"></script>
+<script src="../../rocket-boots/scripts/rocketboots/Entity.js"></script>
+<!-- <script src="scripts/scroll_o_sprites.js"></script> -->
+<!-- <script src="scripts/Character.js"></script> -->
+<!-- <script src="scripts/game.js"></script> -->
 
 <!-- WULF -->
 <script type="module" src="scripts/client.js"></script>
 <!-- <script nomodule src="fallback.js"></script> -->
+
 </html>

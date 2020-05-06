@@ -1,3 +1,6 @@
+import PixiDisplay from './rocket-boots-pixi-display.js';
+
+let display = null;
 
 //----------------------- DOM
 
@@ -95,13 +98,70 @@ let character = {};
 
 //----------------------- Map Refresh
 
+const scrollOSpritesTileDictionary = {
+	"brick": "stone-wall-1",
+	"door": "door",
+	"grass": "grass",
+	"dirt": "dirt",
+	"tree": "tree",
+	"mountain": "stones", // "rocks-1",
+	"water": "ocean"
+};
 const METER_SCALE = 1000; // TODO: get from map itself
 const mapsSocket = io('http://localhost:5000/wulf/maps');
 mapsSocket.on('refresh', refreshMap);
 
+function convertToScrollOSpritesTerrain(terrain, tiles) {
+	const arr = [];
+	terrain.forEach((row, y) => {
+		const newRow = [];
+		arr.push(newRow);
+		for(let x = 0; x < row.length; x++) {
+			const tileLetter = row.charAt(x);
+			const tileKey = tiles[tileLetter];
+			const scrollOSpritesTileKey = scrollOSpritesTileDictionary[tileKey];
+			newRow.push(scrollOSpritesTileKey);
+		}
+	});
+	return arr;
+}
+
+function addCharactersToTerrain(sosTerrain, characters) {
+	let charPosition;
+	characters.arr.forEach((char) => {
+		const isYourCharacter = (char.userKey === user.userKey);
+		const { x, y } = getCharacterTileCoords(char);
+		if (isYourCharacter) {
+			charPosition = { x, y };
+		}
+		const genderType = (char.gender === 0) ? 'woman' : 'man';
+		sosTerrain[y][x] = (isYourCharacter) ? 'druid-' + genderType : genderType;
+	});
+	return charPosition;
+}
+
+function getCharacterTileCoords(char) {
+	const x = Math.floor(char.pos.x / METER_SCALE);
+	const y = Math.floor(char.pos.y / METER_SCALE);
+	return { x, y };
+}
+
 function refreshMap(map) {
+	const { terrain, characters, tiles } = map;
+	const sosTerrain = convertToScrollOSpritesTerrain(terrain, tiles);
+	const charPos = addCharactersToTerrain(sosTerrain, characters);
+	display.refresh(sosTerrain, charPos, handleSpriteClick);
+	refreshTextMap(map);
+}
+
+function handleSpriteClick(sprite, x, y) {
+	commander.moveTo(x, y);
+}
+
+	
+function refreshTextMap(map) {
 	const { terrain, mapKey, characters, tiles } = map;
-	console.log('refreshing map', map);
+	// console.log('refreshing map', map);
 	let html = '';
 	terrain.forEach((row, y) => {
 		for(let x = 0; x < row.length; x++) {
@@ -144,6 +204,8 @@ function init() {
 }
 
 function setupDOMAndInput() {
+	display = new PixiDisplay();
+	display.start();
 	setupForms();
 	document.addEventListener('keypress', onKeyPress);
 	mapElement.addEventListener('click', onClickMap);
