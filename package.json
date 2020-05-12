@@ -1,0 +1,29 @@
+{
+  "name": "wulf-client",
+  "version": "0.1.0",
+  "description": "Web-based Ultima-Like Framework Client/website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rocket-boots/WULF-client.git"
+  },
+  "keywords": [
+    "retro",
+    "game",
+    "ultima",
+    "rpg",
+    "roguelike"
+  ],
+  "author": "Luke Nickerson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rocket-boots/WULF-client/issues"
+  },
+  "homepage": "https://github.com/rocket-boots/WULF-client#readme",
+  "dependencies": {
+    "roguelike-fonts": "github:rocket-boots/roguelike-fonts"
+  }
+}

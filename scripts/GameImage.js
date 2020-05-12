@@ -68,7 +68,7 @@
 
 	const component = {
 		fileName: "GameImage",
-		classes: ["GameImage": GameImage],
+		classes: {"GameImage": GameImage},
 		requirements: [],
 		description: "GameImage class",
 		credits: "By Luke Nickerson, 2017-2018"

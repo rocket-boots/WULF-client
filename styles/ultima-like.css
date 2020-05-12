@@ -1,3 +1,8 @@
+@font-face {
+	font-family: "AppleII";
+	src: url("fonts/AppleII.ttf");
+}
+
 html, body {
 	padding: 0;
 	margin: 0;
@@ -42,6 +47,7 @@ body {
 	background-color: #5252FF;
 	border-radius: 1em;
 	box-shadow: 0 1em 1em rgba(0,0,0,0.2);
+	font-family: "AppleII", monospace;
 }
 
 .controller {
@@ -113,14 +119,22 @@ body {
 .chat-message {
 	margin-bottom: 0.5em;
 }
+#chat-input {
+	padding: 0.5em;
+}
+#chat-input:focus::before {
+	content: ">";
+	display: inline-block;
+}
 
 
 /* game temp */
 
 #map span {
-	font-size: 1rem;
+	font-family: 'Courier New', monospace;
+	font-size: 0.5rem;
 	display: inline-block;
-	width: 1em;
+	/* width: 1em; */
 	text-align: center;
 	cursor: pointer;
 	background: rgba(0,0,0,0.2);

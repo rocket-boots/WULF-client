@@ -1,5 +1,6 @@
 import scroll_o_sprites from './scroll_o_sprites.js';
 
+const SPRITE_INFO_KEY_JOINER = '/';
 const TILE_SIZE = 16;
 const SPRITESHEET_URL = "images/scroll-o-sprites_spritesheet.png";
 const { PIXI, RocketBoots } = window;
@@ -32,8 +33,10 @@ class PixiDisplay {
 		this.colors = PixiDisplay.getColors();
 		this.app = null; // pixi app
 		this.center = RocketBoots.Coords(0, 0);
-		this.spritesheet = null;
-		this.terrainTypeImages = null;
+		this.spritesheets = {
+			"sos": null
+		};
+		this.sprites = new Map();
 		this.stageContainer = null;
 		this.containers = null;
 		// d.hero = null;
@@ -72,14 +75,12 @@ class PixiDisplay {
 		return RocketBoots.Coords((pixiApp.renderer.width / 2), (pixiApp.renderer.height / 2));
 	}
 
-	refresh(sosTerrain, focusTilePosition, spriteClickHandler) {
-		console.log('refreshing pixi display');
-		this.spriteClickHandler = spriteClickHandler;
+	refresh(spriteTerrain, offTileSpritesInfo, focusTilePosition, eventHandlers) {
 		this.addTerrainImagesToContainer(
-			this.terrainTypeImages,
-			sosTerrain,
+			spriteTerrain,
+			offTileSpritesInfo,
 			this.containers.terrain,
-			spriteClickHandler
+			eventHandlers
 		);
 		this.centerStageContainerOnTile(focusTilePosition);
 	}
@@ -164,71 +165,137 @@ class PixiDisplay {
 		return spritesheet;
 	}
 
-	static getScrollOSpriteColoring(colors) {
-		return {
-			"ocean": colors.blue,
-			"grass": colors.darkGreen,
-			"tree": colors.green,
-			"stones": colors.lightGray,
-			"stone-wall-1": colors.lightGray,
-			"door": colors.brown,
-			"dirt": colors.brown,
-			"small-plant": colors.brown,
-			"woman": colors.white,
-			"man": colors.white,
-			"druid-woman": colors.yellow,
-			"druid-man": colors.yellow,
-			"bullseye": colors.yellow,
-			// TODO: add more as needed
-		};
-	}
+	// static getScrollOSpriteColoring(colors) {
+	// 	return {
+	// 		"ocean": colors.blue,
+	// 		"grass": colors.darkGreen,
+	// 		"tree": colors.green,
+	// 		"stones": colors.lightGray,
+	// 		"stone-wall-1": colors.lightGray,
+	// 		"door": colors.brown,
+	// 		"dirt": colors.brown,
+	// 		"small-plant": colors.green,
+	// 		"woman": colors.white,
+	// 		"man": colors.white,
+	// 		"druid-woman": colors.yellow,
+	// 		"druid-man": colors.yellow,
+	// 		"bullseye": colors.yellow,
+	// 		"apple": colors.red,
+	// 		"turnip": colors.green,
+	// 		// TODO: add more as needed
+	// 	};
+	// }
 
-	static createTerrainTypeImages(spritesheet, colors) {
-		const coloring = PixiDisplay.getScrollOSpriteColoring(colors);
-		const terrTypeImages = {};
-		const keys = Object.keys(coloring);
-		keys.forEach((key) => {
-			const image = spritesheet.getImageCopy(key);
-			image.replaceColor(colors.scrollOSprites, coloring[key]);
-			terrTypeImages[key] = image;
+	// static createTerrainTypeImages(spritesheet, colors) {
+	// 	const coloring = PixiDisplay.getScrollOSpriteColoring(colors);
+	// 	const terrTypeImages = {};
+	// 	const keys = Object.keys(coloring);
+	// 	keys.forEach((key) => {
+	// 		const image = spritesheet.getImageCopy(key);
+	// 		image.replaceColor(colors.scrollOSprites, coloring[key]);
+	// 		terrTypeImages[key] = image;
+	// 	});
+	// 	return terrTypeImages;
+	// }
+
+	addTileSprites(tileTypeSpriteInfo = {}) { // mutates `this.sprites`
+		Object.keys(tileTypeSpriteInfo).forEach((key) => {
+			const spriteInfo = tileTypeSpriteInfo[key];
+			const image = this.convertSpriteInfoToImage(spriteInfo);
+			this.sprites.set(spriteInfo, image);
 		});
-		return terrTypeImages;
 	}
 
-	addTerrainImagesToContainer(terrTypeImages, terrain, container, spriteClickHandler) {
+	convertSpriteInfoToImage(spriteInfo) {
+		const spriteInfoArr = spriteInfo.split(SPRITE_INFO_KEY_JOINER);
+		if (spriteInfoArr.length !== 3) {
+			console.error('Error with spriteInfo', spriteInfo, 'key:', key);
+			return;
+		}
+		const spriteSheetKey = spriteInfoArr[0]; // e.g. "sos"
+		const spriteKey = spriteInfoArr[1]; // e.g. "grass"
+		const colorName = spriteInfoArr[2]; // e.g. "brown"
+		const spriteSheetSprite = this.spritesheets[spriteSheetKey];
+		if (!spriteSheetSprite) {
+			console.error('Sprite not found:', spriteSheetKey, '...in:', this.spritesheets);
+			return;
+		}
+		const image = spriteSheetSprite.getImageCopy(spriteKey);
+		image.replaceColor(this.colors.scrollOSprites, this.colors[colorName]);
+		return image;
+	}
+
+	getOrMakeSpriteImage(spriteInfo = '') {
+		if (!spriteInfo || spriteInfo === '') {
+			return false;
+		}
+		let image = this.sprites.get(spriteInfo);
+		if (!image) {
+			// console.warn('No image found named', spriteInfo, 'in sprites', this.sprites, image, this.sprites.has(spriteInfo));
+			image = this.convertSpriteInfoToImage(spriteInfo);
+			if (image) {
+				this.sprites.set(spriteInfo, image);
+			}
+		}
+		return image;
+	}
+
+	addTerrainImagesToContainer(terrain, offTileSpritesInfo, container, eventHandlers) {
 		// TODO: Switch to an update rather than removing and re-adding
 		// https://pixijs.download/dev/docs/PIXI.Container.html
 		container.removeChildren();
-		// TODO: Trim the terrain to only the tiles that could reasonably be in view?
+		
+		const addSprite = (spriteInfo, x, y) => {
+			let image = this.getOrMakeSpriteImage(spriteInfo);
+			if (!image) { return; }
+			const sprite = this.convertImageToTilePixiSprite(image, x, y);
+			this.makeSpriteInteractive(sprite, eventHandlers);
+			container.addChild(sprite);			
+		};
+
 		terrain.forEach((row, y) => {
 			const xLength = row.length;
 			for(let x = 0; x < xLength; x++) {
-				const image = terrTypeImages[row[x]];
-				if (!image) {
-					console.warn('No image found named', row[x], '(row ', x, ') in', terrTypeImages);
-				}
-				const sprite = this.convertImageToTilePixiSprite(image, x, y);
-				this.makeSpriteInteractive(sprite, spriteClickHandler, terrTypeImages);
-				container.addChild(sprite);
+				const spriteInfo = row[x];
+				addSprite(spriteInfo, x, y);
 			}
+		});
+		// Handle things that are not exactly on the tile grid
+		offTileSpritesInfo.forEach((info) => {
+			addSprite(info.spriteInfo, info.x, info.y);
 		});
 	}
 
-	makeSpriteInteractive(sprite, spriteClickHandler, terrTypeImages) {
+	makeSpriteInteractive(sprite, eventHandlers) {
 		// http://scottmcdonnell.github.io/pixi-examples/index.html?s=demos&f=interactivity.js&title=Interactivity
 		sprite.buttonMode = true; // TODO: needed?
 		sprite.interactive = true;
 		const tileSize = this.getZoomedTileSize();
+		const onEvent = (sprite, handler) => {
+			const x = sprite.x / tileSize;
+			const y = sprite.y / tileSize;
+			const spriteInfo = handler(sprite, x, y);
+			if (spriteInfo) {
+				const image = this.getOrMakeSpriteImage(spriteInfo);
+				if (image) {
+					sprite.texture = PIXI.Texture.from(image);
+				}
+			}			
+		};
 		function onClick() {
-			const x = this.x / tileSize;
-			const y = this.y / tileSize;
-			spriteClickHandler(this, x, y);
-			this.texture = PIXI.Texture.from(terrTypeImages.bullseye);
+			return onEvent(this, eventHandlers.mousedown);
 		}
-		// sprite.on('mousedown', spriteClickHandler);
-		// sprite.on('touchstart', spriteClickHandler);
-		sprite.on('click', onClick);
-		sprite.on('tap', onClick);
+		sprite.on('mousedown', onClick);
+		sprite.on('touchstart', onClick);
+		// sprite.on('click', onClick);
+		function onHover() {
+			return onEvent(this, eventHandlers.mouseover);
+		}
+		sprite.on('mouseover', onHover);
+		function onRightClick() {
+			return onEvent(this, eventHandlers.rightclick);
+		}
+		sprite.on('rightclick', onRightClick);
 	}
 	
 	convertImageToTilePixiSprite(image, x, y) {
@@ -242,6 +309,10 @@ class PixiDisplay {
 	}
 
 	start() { // start after the DOM is loaded
+		if (!RocketBoots.Spritesheet || !RocketBoots.Color || !RocketBoots.Coords) {
+			console.error('RocketBoots missing modules', RocketBoots);
+			RocketBoots.loadComponents(['Spritesheet', 'Color', 'Coords']);
+		}
 		this.app = PixiDisplay.createPixiApp();
 		this.center = PixiDisplay.getCenter(this.app);
 		this.stageContainer = PixiDisplay.createStageContainer(this.app, this.center);
@@ -256,9 +327,9 @@ class PixiDisplay {
 			"weather"
 		]);
 		this.loader([SPRITESHEET_URL]).then(() => {
-			this.spritesheet = PixiDisplay.createSpritesheet();
-			this.spritesheet.loaded.then((spritesheet) => {
-				this.terrainTypeImages = PixiDisplay.createTerrainTypeImages(spritesheet, this.colors);
+			this.spritesheets.sos = PixiDisplay.createSpritesheet();
+			this.spritesheets.sos.loaded.then((spritesheet) => {
+				// this.terrainTypeImages = PixiDisplay.createTerrainTypeImages(spritesheet, this.colors);
 				// d.hero = createNewCharacter(spritesheet);
 				// d.monsters = createMonsters(spritesheet);
 		
